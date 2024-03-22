@@ -1,3 +1,11 @@
+from libinstaller import *
+try:
+    install_and_show_output("python3-nmap")
+    install_and_show_output("python3-networkx")
+    install_and_show_output("python3-matplotlib")
+except subprocess.CalledProcessError as e:
+    print(f"Error al instalar librerías: {e}")
+    
 from xprintinfo import *
 from xgetinfo import *
 from xgetinforemote import *
