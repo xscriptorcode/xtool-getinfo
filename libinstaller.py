@@ -2,9 +2,9 @@ import subprocess
 
 def install_and_show_output(package):
     try:
-        print(f"Instalando {package}...")
+        print(f"Installing {package}...")
         subprocess.check_call(["apt", "install", package])
-        print(f"{package} instalado correctamente.")
+        print(f"{package} Correcting installation.")
     except subprocess.CalledProcessError as e:
-        print(f"Error al instalar {package}: {e}")
+        print(f"Error installing {package}: {e}")
 
