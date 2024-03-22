@@ -1,5 +1,19 @@
 ##  XTool-GetInfo: Network Information Gathering and Analysis
 
+###  Requirements:
+
+##  Libraries:
+
+* nmap
+  ``` $ apt install python3-nmap```
+* networkx
+  ``` $ apt install python3-networkx ``` 
+* matplotlib
+  ``` $ apt install python3-matplotlib ``` 
+* importlib
+* subprocess
+
+
 ###  Installation:
 
 *  ``` $ git clone https://github.com/xscriptorcode/xtool-getinfo.git ```
@@ -34,13 +48,6 @@ XTool GetInfo is a comprehensive application for network information gathering a
 * Network mapping (under development)
 * Visualization:
 * Generation of graphs with machines as nodes and connections as edges.
-##  Libraries:
-
-* nmap
-* networkx
-* matplotlib
-* importlib
-* subprocess
 
 ##### XTool GetInfo is an open source project. If you want to contribute to the development of the app, you can do so to this bnb wallet: 0x2055b4C5918A5A88BF235bF75AACB31457E50837
 
