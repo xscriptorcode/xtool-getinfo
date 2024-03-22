@@ -10,7 +10,6 @@
   ``` $ apt install python3-networkx ``` 
 * matplotlib
   ``` $ apt install python3-matplotlib ``` 
-* importlib
 * subprocess
 
 
