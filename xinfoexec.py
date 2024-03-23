@@ -127,7 +127,8 @@ def main():
                             scan_for_vulnerabilities(ip_address)
                         elif choice_locall == '5':
                             ip_address = input("Enter the IP address with /24 at the end if it's kist your network then: 192.168.1.0/24: ")
-                            create_network_map(ip_address)
+                            output_file = input("Enter the file name to save the network map: ")
+                            create_network_map(ip_address, output_file)
                         else:
                             print("Invalid choice. Please select a number from 1 to 2.")
                     else:

@@ -81,35 +81,25 @@ def scan_for_vulnerabilities(ip_address):
                 print(f"Port : {port} \tState : {port_info['state']} \tName : {port_info['name']} \tProduct : {port_info['product']} \tVersion : {port_info['version']}")
 
 
-
-def create_network_map(ip_address, static_ips, dynamic_ips):
+def create_network_map(ip_address, output_file):
     nm = nmap.PortScanner()
-    nm.scan(hosts=ip_address, arguments='-sn')  # Scan network looking for devices up
-
+    nm.scan(hosts=ip_address, arguments='-sn')
+    
     G = nx.Graph()
-
+    
     for host in nm.all_hosts():
-        if host in static_ips:
-            G.add_node(host, label=nm[host].hostname(), color='r')  # Use red for static IPs
-        elif host in dynamic_ips:
-            G.add_node(host, label=nm[host].hostname(), color='b')  # Use blue for dynamic IPs
-        else:
-            G.add_node(host, label=nm[host].hostname())  # Default color for other IPs
-
+        G.add_node(host, label=nm[host].hostname())
+    
     for host in nm.all_hosts():
         for proto in nm[host].all_protocols():
             ports = nm[host][proto].keys()
             for port in ports:
                 G.add_edge(host, f"{host}:{port}")
-
+    
     pos = nx.spring_layout(G)
+    
+    nx.draw(G, pos, with_labels=True, font_weight='bold')
+    plt.savefig(output_file, format='jpg')
+    plt.close()
 
-    node_colors = [node[1].get('color', 'b') for node in G.nodes(data=True)]
-    nx.draw(G, pos, with_labels=True, font_weight='bold', node_color=node_colors)
-
-    # Add descriptions
-    plt.text(0.5, 1.05, "red = static", ha="center", va="center", transform=plt.gca().transAxes)
-    plt.text(0.5, 1.02, "blue = dynamic", ha="center", va="center", transform=plt.gca().transAxes)
-
-    plt.savefig("network_map.png")  # save the graph as an image
-
+    print(f"Map saved as: {output_file} in the current directory.")
