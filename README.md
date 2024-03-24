@@ -1,3 +1,5 @@
+![Language](https://img.shields.io/badge/Language-Python-blue)
+
 ##  XTool-GetInfo: Network Information Gathering and Analysis
 
 ###  Requirements:
