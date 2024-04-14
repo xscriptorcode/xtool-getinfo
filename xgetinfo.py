@@ -1,5 +1,6 @@
 import psutil
 import platform
+import os
 
 def get_system_info():
     return {
@@ -47,37 +48,80 @@ def get_network_info():
         "Network Interfaces": psutil.net_if_addrs(),
     }
 
-def get_disk_info():
-    disk_partitions = psutil.disk_partitions()
+def get_disk_info() -> dict:
+    disk_partitions = sorted(psutil.disk_partitions(), key=lambda x: x.mountpoint)
     disk_usage = psutil.disk_usage('/')
     disk_io_counters = psutil.disk_io_counters()
 
-    disk_info = {
-        "Disk Partitions": [],
-        "Disk Usage": {
-            "Total Space (GB)": disk_usage.total / (1024 ** 3),
-            "Used Space (GB)": disk_usage.used / (1024 ** 3),
-            "Free Space (GB)": disk_usage.free / (1024 ** 3),
-            "Percentage Used": disk_usage.percent,
-        },
+    disk_info = {}
+
+    for partition in disk_partitions:
+        usage = psutil.disk_usage(partition.mountpoint)
+        disk_info[partition.mountpoint] = {
+            "Total (GB)": usage.total / (1024 ** 3),
+            "Used (GB)": usage.used / (1024 ** 3),
+            "Free (GB)": usage.free / (1024 ** 3),
+            "FSType": partition.fstype,
+        }
+
+    disk_info["/"] = {
+        "Total (GB)": disk_usage.total / (1024 ** 3),
+        "Used (GB)": disk_usage.used / (1024 ** 3),
+        "Free (GB)": disk_usage.free / (1024 ** 3),
         "Disk I/O Counters": {
-            "Read Count": disk_io_counters.read_count,
-            "Write Count": disk_io_counters.write_count,
             "Read Bytes": disk_io_counters.read_bytes,
             "Write Bytes": disk_io_counters.write_bytes,
         }
     }
 
-    for partition in sorted(disk_partitions, key=lambda x: x.mountpoint):
-        usage = psutil.disk_usage(partition.mountpoint)
-        partition_info = {
-            "Mountpoint": partition.mountpoint,
-            "File System Type": partition.fstype,
-            "Total Space (GB)": usage.total / (1024 ** 3),
-            "Used Space (GB)": usage.used / (1024 ** 3),
-            "Free Space (GB)": usage.free / (1024 ** 3),
-            "Percentage Used": usage.percent,
-        }
-        disk_info["Disk Partitions"].append(partition_info)
-
     return disk_info
+
+
+def get_full_analysis_html():
+    # create the analysys directory
+    analysis_dir = 'analysis'
+    if not os.path.exists(analysis_dir):
+        os.mkdir(analysis_dir)
+    # create the html file name
+    html_file = 'analysis.html'
+    i = 1
+    while os.path.exists(os.path.join(analysis_dir, html_file)):
+        html_file = f'analysis({i}).html'
+        i += 1
+    # add the data to the file.
+    with open(os.path.join(analysis_dir, html_file), 'w') as f:
+        f.write('<!DOCTYPE html>\n<html lang="es">\n<head>\n<meta charset="UTF-8">\n<title>Análisis del sistema</title>\n<style>\n.collapsible {background-color: #777; color: white; cursor: pointer; padding: 18px; width: 100%; border: none; text-align: left; outline: none; font-size: 15px;}\n.active, .collapsible:hover {background-color: #555;}\n.collapsible:after {content: "+"; font-size: 13px; color: white; float: right; margin-left: 5px;}\n.active:after {content: "-";}\n.content {padding: 0 18px; max-height: 0; overflow: hidden; transition: max-height 0.2s ease-out;}\n</style>\n</head>\n<body>')
+        f.write('<h1>System</h1>\n<button class="collapsible">Sistema</button>\n<div class="content"><ul>')
+        for key, value in get_system_info().items():
+            f.write(f'<li><strong>{key}</strong>: {value}</li>\n')
+        f.write('</ul></div>\n\n<h1>CPU</h1>\n<button class="collapsible">CPU</button>\n<div class="content"><ul>')
+        for key, value in get_cpu_info().items():
+            f.write(f'<li><strong>{key}</strong>: {value}</li>\n')
+        f.write('</ul></div>\n\n<h1>Memory</h1>\n<button class="collapsible">Memoria</button>\n<div class="content"><ul>')
+        for key, value in get_memory_info().items():
+            f.write(f'<li><strong>{key}</strong>: {value}</li>\n')
+        f.write('</ul></div>\n\n<h1>Processes</h1>\n<button class="collapsible">Procesos</button>\n<div class="content"><ul>')
+        for process in get_processes():
+            f.write('<li>')
+            for key, value in process.items():
+                f.write(f'<strong>{key}</strong>: {value}<br>')
+            f.write('</li>\n')
+        f.write('</ul></div>\n\n<h1>Network Connections</h1>\n<button class="collapsible">Red</button>\n<div class="content"><ul>')
+        for key, value in get_network_info().items():
+            if key == "Network Connections":
+                for connection in value:
+                    f.write(f'<li>Process ID: {connection.pid}<br>Local Address: {connection.laddr}<br>Remote Address: {connection.raddr}<br>Status: {connection.status}</li>\n')
+            else:
+                f.write(f'<li><strong>{key}</strong>: {value}</li>\n')
+        f.write('</ul></div>\n\n<h1>Disk Information</h1>\n<button class="collapsible">Disco</button>\n<div class="content"><ul>')
+        for key, value in get_disk_info().items():
+            f.write(f'<li><strong>{key}</strong>')
+            for key2, value2 in value.items():
+                f.write(f'<strong>{key2}</strong>: {value2}')
+            f.write('</li>\n')
+        f.write('</ul></div>\n</body>\n</html>\n<script>\nvar coll = document.getElementsByClassName("collapsible");\nvar i;\n\nfor (i = 0; i < coll.length; i++) {\n  coll[i].addEventListener("click", function() {\n    this.classList.toggle("active");\n    var content = this.nextElementSibling;\n    if (content.style.maxHeight){\n      content.style.maxHeight = null;\n    } else {\n      content.style.maxHeight = content.scrollHeight + "px";\n    } \n  });\n}\n</script>')
+
+
+
+
+
