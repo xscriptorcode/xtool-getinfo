@@ -1,0 +1,31 @@
+def print_main_menu():
+    print("*_________________________________*")
+    print("Main Menu:")
+    print("1. Local Machine Information")
+    print("2. External Machine Tests")
+    print("3. Exit")
+    print("*_________________________________*")
+
+def print_menu():
+    print("*_________________________________*")
+    print("Menu:")
+    print("1. System Information")
+    print("2. CPU Information")
+    print("3. Memory Information")
+    print("4. Processes")
+    print("5. Network Information")
+    print("6. Disk Information")
+    print("7. Get Full Analysis on html file")
+    print("8. Exit")
+    print("*_________________________________*")
+
+def print_external_menu():
+    print("*_________________________________*")
+    print("External Machine Tests:")
+    print("1. Scann your network")
+    print("2. Scan subnet")
+    print("3. Scan a target with the ip(OS information)")
+    print("4. Scan a target with the ip(Vulnerabilities)")
+    print("5. Scan and create a map")
+    print("6. Exit")
+    print("*_________________________________*")
