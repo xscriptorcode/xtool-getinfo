@@ -15,7 +15,8 @@ def print_menu():
     print("4. Processes")
     print("5. Network Information")
     print("6. Disk Information")
-    print("7. Exit")
+    print("7. Get Full Analysis on html file")
+    print("8. Exit")
     print("*_________________________________*")
 
 def print_external_menu():
