@@ -90,37 +90,37 @@ def get_full_analysis_html():
         i += 1
     # add the data to the file.
     with open(os.path.join(analysis_dir, html_file), 'w') as f:
-        f.write('<!DOCTYPE html>\n<html lang="es">\n<head>\n<meta charset="UTF-8">\n<title>Análisis del sistema</title>\n<style>\n.collapsible {background-color: #777; color: white; cursor: pointer; padding: 18px; width: 100%; border: none; text-align: left; outline: none; font-size: 15px;}\n.active, .collapsible:hover {background-color: #555;}\n.collapsible:after {content: "+"; font-size: 13px; color: white; float: right; margin-left: 5px;}\n.active:after {content: "-";}\n.content {padding: 0 18px; max-height: 0; overflow: hidden; transition: max-height 0.2s ease-out;}\n</style>\n</head>\n<body>')
-        f.write('<h1>System</h1>\n<button class="collapsible">Sistema</button>\n<div class="content"><ul>')
+        f.write('<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n<title>System Analysis</title>\n<style>\n.collapsible {background-color: #777; color: white; cursor: pointer; padding: 18px; width: 100%; border: none; text-align: left; outline: none; font-size: 15px;}\n.active, .collapsible:hover {background-color: #555;}\n.collapsible:after {content: "+"; font-size: 13px; color: white; float: right; margin-left: 5px;}\n.active:after {content: "-";}\n.content {padding: 0 18px; max-height: 0; overflow: hidden; transition: max-height 0.2s ease-out;}\n</style>\n</head>\n<body>')
+        f.write('<h1>System</h1>\n<button class="collapsible">System</button>\n<div class="content"><ul>')
         for key, value in get_system_info().items():
             f.write(f'<li><strong>{key}</strong>: {value}</li>\n')
         f.write('</ul></div>\n\n<h1>CPU</h1>\n<button class="collapsible">CPU</button>\n<div class="content"><ul>')
         for key, value in get_cpu_info().items():
             f.write(f'<li><strong>{key}</strong>: {value}</li>\n')
-        f.write('</ul></div>\n\n<h1>Memory</h1>\n<button class="collapsible">Memoria</button>\n<div class="content"><ul>')
+        f.write('</ul></div>\n\n<h1>Memory</h1>\n<button class="collapsible">Memory</button>\n<div class="content"><ul>')
         for key, value in get_memory_info().items():
             f.write(f'<li><strong>{key}</strong>: {value}</li>\n')
-        f.write('</ul></div>\n\n<h1>Processes</h1>\n<button class="collapsible">Procesos</button>\n<div class="content"><ul>')
+        f.write('</ul></div>\n\n<h1>Processes</h1>\n<button class="collapsible">Processes</button>\n<div class="content"><ul>')
         for process in get_processes():
             f.write('<li>')
             for key, value in process.items():
                 f.write(f'<strong>{key}</strong>: {value}<br>')
             f.write('</li>\n')
-        f.write('</ul></div>\n\n<h1>Network Connections</h1>\n<button class="collapsible">Red</button>\n<div class="content"><ul>')
+        f.write('</ul></div>\n\n<h1>Network Connections</h1>\n<button class="collapsible">Network</button>\n<div class="content"><ul>')
         for key, value in get_network_info().items():
             if key == "Network Connections":
                 for connection in value:
                     f.write(f'<li>Process ID: {connection.pid}<br>Local Address: {connection.laddr}<br>Remote Address: {connection.raddr}<br>Status: {connection.status}</li>\n')
             else:
                 f.write(f'<li><strong>{key}</strong>: {value}</li>\n')
-        f.write('</ul></div>\n\n<h1>Disk Information</h1>\n<button class="collapsible">Disco</button>\n<div class="content"><ul>')
+        f.write('</ul></div>\n\n<h1>Disk Information</h1>\n<button class="collapsible">Disk</button>\n<div class="content"><ul>')
         for key, value in get_disk_info().items():
             f.write(f'<li><strong>{key}</strong>')
             for key2, value2 in value.items():
                 f.write(f'<strong>{key2}</strong>: {value2}')
             f.write('</li>\n')
         f.write('</ul></div>\n</body>\n</html>\n<script>\nvar coll = document.getElementsByClassName("collapsible");\nvar i;\n\nfor (i = 0; i < coll.length; i++) {\n  coll[i].addEventListener("click", function() {\n    this.classList.toggle("active");\n    var content = this.nextElementSibling;\n    if (content.style.maxHeight){\n      content.style.maxHeight = null;\n    } else {\n      content.style.maxHeight = content.scrollHeight + "px";\n    } \n  });\n}\n</script>')
-
+        print("Successfully created the full analysis HTML file.\nOpen it with your favorite web browser.\n")
 
 
 
