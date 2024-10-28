@@ -49,5 +49,3 @@ XTool GetInfo is a comprehensive application for network information gathering a
 * Network mapping
 * Generation of graphs with machines as nodes and connections as edges.
 
-##### XTool GetInfo is an open source project. If you want to contribute to the development of the app, you can do so to this bnb wallet: 0x2055b4C5918A5A88BF235bF75AACB31457E50837
-
